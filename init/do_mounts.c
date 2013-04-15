@@ -523,8 +523,13 @@ void __init mount_root(void)
 	}
 #endif
 #ifdef CONFIG_BLOCK
-	create_dev("/dev/root", ROOT_DEV);
-	mount_block_root("/dev/root", root_mountflags);
+	if (saved_root_name[0]) {
+		devtmpfs_mount("dev");
+		mount_block_root(saved_root_name, root_mountflags);
+    } else {
+		create_dev("/dev/root", ROOT_DEV);
+		mount_block_root("/dev/root", root_mountflags);
+    }
 #endif
 }
 
